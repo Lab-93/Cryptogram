@@ -1,0 +1,2 @@
+#!/bin/bash
+/home/guyyatsu/.local/bin/jupyter nbconvert --to python CredentialManagement.ipynb
