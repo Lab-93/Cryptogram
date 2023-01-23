@@ -118,7 +118,7 @@ def Store_SingleKey(keyfile, database, credential, platform):
   # Add the secret to the column
   info(f"Adding credential to {platform} column.")
   try: execute("UPDATE credentials SET {}=? WHERE username='admin';"\
-    .format(platform), (secret,)
+       .format(platform.lower()), (secret,)
   )
 
   except Exception as error:
