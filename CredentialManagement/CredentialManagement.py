@@ -125,7 +125,6 @@ def Store_SingleKey(keyfile, database, credential, platform):
     exception(f"There was a problem trying to write the credential to the table.")
     return error
 
-  info() 
   return connection.commit()
 
 
@@ -185,9 +184,7 @@ def Store_MultiKey(keyfile="tests/test.key", database="tests/test.db", credentia
   # Add the encrypted key to the $platform_key column.
   info(f"Adding platform key to {platform}_key column.")
   try:
-    execute(
-      "UPDATE credentials SET {}=? WHERE username='admin';"\
-        .format(f"{platform}_key"),
+    execute("UPDATE credentials SET {}=? WHERE username='admin';".format(f"{platform}_key"),
         (credential['key'],)
     )
     info("Addition successful.")
