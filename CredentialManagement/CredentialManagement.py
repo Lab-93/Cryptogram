@@ -288,3 +288,115 @@ def MultiKeyAPICredentials( platform, credabase, keyfile ):
 
   return credentials
 
+
+# # Userland Credential Addition
+
+# In[ ]:
+
+
+def AddCredential():
+
+  # Check if this is a single or multi key.
+  while True:
+    single_key = str(input("Is this a single-key credential? y/n\n"))
+
+    if len(single_key) == 0:
+      single_key = True
+      break
+
+    if single_key[0].lower() == 'y':
+      single_key == True
+      break
+
+    elif single_key[0].lower() == 'n':
+      single_key == False
+      break
+
+    else:
+      print("Error! Please only type either ues or no.")
+
+
+  # Collect the platform to add credentials for.
+  while True:
+    platform = str(input("Type the name of the platform to add credentials for:\n"))
+    confirmation = input(f"You typed: {platform};\nis this correct? Y/n\n")
+
+    if len(confirmation) == 0: break
+
+    if confirmation[0].lower() == "y": break
+    elif confirmation[0].lower() == "n": pass
+    else:
+      print("Error! Please type either yes or no.")
+  
+
+  # Collect the keyfile.
+  while True:
+    keyfile = str(input("Type the filepath to the keyfile to encrypt the credential with:\n"))
+    confirmation = input(f"You typed: {keyfile};\nis this correct? Y/n\n")
+
+    if len(confirmation) == 0: break
+
+    if confirmation[0].lower() == "y" or None: break
+    elif confirmation[0].lower() == "n": pass
+    else:
+      print("Error! Please type either yes or no.")
+
+
+  # Collect database filepath.
+  while True:
+    database = str(input("Type the filepath to the database to store the credential.\n"))
+    confirmation = input(f"You typed: {database}; is this correct? Y/n\n")
+
+    if len(confirmation) == 0: break
+
+    if confirmation[0].lower() == "y" or None: break
+    elif confirmation[0].lower() == "n": pass
+    else:
+      print("Error! Please type either yes or no.")
+
+
+  # Collect the credentials.
+  if single_key:
+
+    while True:
+      credential = str(input("Type the credential to be stored:\n"))
+      confirmation = input(f"You typed: {credential}; is this correct? Y/n\n")
+
+      if len(confirmation) == 0: break
+
+      if confirmation[0].lower() == "y" or None: break
+      elif confirmation[0].lower() == "n": pass
+      else: print("Error! Please type either yes or no.")
+
+    return Store_SingleKey(keyfile, database, credential, platform)
+
+
+  else:
+
+    while True:
+      credential_key = str(input("Type the credential key to be stored:\n"))
+      confirmation = input(f"You typed: {credential_key}; is this correct? Y/n\n")
+
+      if len(confirmation) == 0: break
+
+      if confirmation[0].lower() == "y": break
+      elif confirmation[0].lower() == "n": pass
+      else: print("Error! Please type either yes or no.")
+
+
+    while True:
+      credential_secret = str(input("Type the credential key to be stored:\n"))
+      confirmation = input(f"You typed: {credential_secret}; is this correct? Y/n\n")
+
+      if len(confirmation) == 0: break
+      
+      if confirmation[0].lower() == "y": break
+      elif confirmation[0].lower() == "n": pass
+      else: print("Error! Please type either yes or no.")
+
+
+    credential = {
+      "key": credential_key,
+      "secret": credential_secret
+    }; return Store_MultiKey(keyfile, database, credential, platform)
+
