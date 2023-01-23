@@ -174,7 +174,7 @@ def Store_MultiKey(keyfile="tests/test.key", database="tests/test.db", credentia
   # Create a $platform_key column for the credentials table.
   info(f"Creating {platform}_key column within credentials database.")
   try:
-    execute( "ALTER credentials ADD {} BYTES".format(f"{platform}_key"))
+    execute( "ALTER TABLE credentials ADD {} BYTES".format(f"{platform}_key"))
     info("Column {platform}_key created.")
 
   except Exception as error:
@@ -211,7 +211,7 @@ def Store_MultiKey(keyfile="tests/test.key", database="tests/test.db", credentia
   # Create a $platform_secret column for the secret credential.
   info(f"Creating {platform}_secret column within the credentials table.")
   try:
-    execute("ALTER credentials ADD {} BYTES".format(f"{platform}_secret"))
+    execute("ALTER TABLE credentials ADD {} BYTES".format(f"{platform}_secret"))
     info("Column {platform}_key creation successful.")
 
   except Exception as error:
