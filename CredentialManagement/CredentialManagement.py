@@ -253,16 +253,13 @@ def SingleKeyAPICredentials( platform="test", credabase="tests/test.db", keyfile
 
 
   info(f"Retrieving single-key credentials for {platform}.\n")
-  secrets = execute(
-    "SELECT ? FROM credentials WHERE username = 'admin'",
-    (platform,)
-  ).fetchall()[0][0]
+  secret = execute("SELECT {} FROM credentials WHERE username = 'admin'".format(platform))\
+           .fetchall()[0][0]
 
-  return cryptogram.Decryption(
-    BuildPrivateKey(keyfile),
-    secret
-  ).decrypt()
+  return CryptographyMethods.Decryption( BuildPrivateKey(keyfile), secret ).decode()
 
+
+# ### Multi-Key
 
 # In[ ]:
 
