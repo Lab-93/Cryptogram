@@ -61,7 +61,7 @@ def BuildPrivateKey(keyfile):
 # In[ ]:
 
 
-def Store_SingleKey(keyfile="tests/test.key", database="tests/test.db", credential="test", platform="test"):
+def Store_SingleKey(keyfile, database, credential, platform):
   """
   This function will add a new credential to the database.
   If the singleKey argument is true then it just encrypts the value of
