@@ -242,11 +242,7 @@ def Store_MultiKey(keyfile="tests/test.key", database="tests/test.db", credentia
 # In[ ]:
 
 
-def SingleKeyAPICredentials( platform, credabase, keyfile ):
-  """
-  This function retrieves the key for any API that only requires a single
-  credential for validation.
-  """
+def SingleKeyAPICredentials( platform="test", credabase="tests/test.db", keyfile="tests/test.key" ):
 
   getLogger()
 
