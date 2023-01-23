@@ -251,8 +251,6 @@ def SingleKeyAPICredentials( platform="test", credabase="tests/test.db", keyfile
   cursor = connection.cursor()
   execute = cursor.execute
 
-  cryptogram = CryptographyMethods
-
 
   info(f"Retrieving single-key credentials for {platform}.\n")
   secrets = execute(
