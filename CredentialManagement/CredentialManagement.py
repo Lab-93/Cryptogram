@@ -2,14 +2,13 @@
 # coding: utf-8
 
 # # Lab-93 Authentication Validation
-# This system ensures that the Lab can operate using as many 'username required' platforms as required for runtime as
-# potentially needed.  
-# 
-# Or, This system remembers our passwords for us!    
-# 
-# The Lab93AuthenticationValidation package ensures that 
+# This module maintains the API credentials used by the system to perform it's duties. It uses the
+# CryptographyMethods package to encrypt everything going in to the credentials table and decrypt everything coming
+# out.
 
 # ## Module Imports
+# Of course SQLite3, argparse, and logging are all utilized, but the main import here is the CryptographyMethods
+# package; which powers the method of secrecy used by the system. 
 
 # In[ ]:
 
@@ -21,6 +20,8 @@ import CryptographyMethods
 
 
 # ## Rebuild Encryption Key
+# All cryptograms are locked behind a secret key known only to the administrator.  This key need not be remembered
+# either; as it's the SHA256 hash of the administrators private ssh key.
 
 # In[ ]:
 
