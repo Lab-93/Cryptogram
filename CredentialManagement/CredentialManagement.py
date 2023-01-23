@@ -31,7 +31,22 @@ def BuildPrivateKey(keyfile):
   getLogger()
   info(f"Reading private key from {keyfile}.")
 
-  cryptogram = CryptographyMethods
+  with open(keyfile, "r") as privkey:
+    privkey = privkey.readlines()
+  
+  privkey.pop(0); privkey.pop(-1)
+
+  key = ""
+  for line in privkey: key += line
+
+  return CryptographyMethods.BuildKey(key)
+
+
+# ## Unlock Credentials
+# This method takes the previously rebuilt key and uses it to decrypt a given string encrypted with that key. 
+
+# In[ ]:
+
 
   with open(keyfile, "r") as privkey:
     privkey = privkey.read()
