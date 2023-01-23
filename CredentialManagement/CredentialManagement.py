@@ -129,6 +129,8 @@ def Store_SingleKey(keyfile, database, credential, platform):
   return connection.commit()
 
 
+# ### Multi-Key
+
 # In[ ]:
 
 
@@ -161,10 +163,7 @@ def Store_MultiKey(keyfile="tests/test.key", database="tests/test.db", credentia
   # Encrypt the platform key credential.
   info("Applying encryption to platform key credential")
   try: 
-    credential['key'] = cryptogram.Encryption(
-      BuildPrivateKey(keyfile),
-      credential['key']
-    )
+    credential['key'] = CryptographyMethods.Encryption( BuildPrivateKey(keyfile), credential['key'] )
     info("Encryption successful.")
   
   except Exception as error:
