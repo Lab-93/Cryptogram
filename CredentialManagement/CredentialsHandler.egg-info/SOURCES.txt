@@ -1,6 +1,0 @@
-CredentialManagement.py
-pyproject.toml
-CredentialsHandler.egg-info/PKG-INFO
-CredentialsHandler.egg-info/SOURCES.txt
-CredentialsHandler.egg-info/dependency_links.txt
-CredentialsHandler.egg-info/top_level.txt
