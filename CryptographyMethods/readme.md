@@ -21,6 +21,6 @@ a string argument and returns the hash of whatever value is given.
 In order to utilize two-way encryption, an encryption key must first be generated.
 Give a string to ```CryptographyMethods.BuildKey()``` to do so.
 
-Next, to encrypt a string call ```CryptographyMethods.Encryption(KEY, 'secret')```.
+Next, to encrypt a string call ```CryptographyMethods.Encryption(KEY, 'secret')```.  
 To decrypt the string, call ```CryptographyMethods.Decryption(KEY, 'encrypted_secret')```
 with the same encryption key.
