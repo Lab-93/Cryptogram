@@ -235,27 +235,9 @@ def Store_MultiKey(keyfile="tests/test.key", database="tests/test.db", credentia
   return connection.commit()
 
 
-# ## Unlock Credentials
-# All credentials need to be decrypted before passing back to the caller; so this method 
+# ## Credential Retrieval
 
-# In[ ]:
-
-
-def CredentialUnlocker( keyfile, credential ):
-  """ This function simply unencrypts a given bytestring,
-  assuming the correct keyfile is supplied. """
-  getLogger()
-  info("Unlocking credentials.\n")
-
-  cryptogram = CryptographyMethods
-
-  return cryptogram.Decryption(
-    BuildPrivateKey(keyfile),
-    credential
-  ).decode()
-
-
-# ## Retrieve Single-Key Credential
+# ### Single-Key
 
 # In[ ]:
 
