@@ -2,14 +2,13 @@
 # coding: utf-8
 
 # # Lab-93 Authentication Validation
-# This system ensures that the Lab can operate using as many 'username required' platforms as required for runtime as
-# potentially needed.  
-# 
-# Or, This system remembers our passwords for us!    
-# 
-# The Lab93AuthenticationValidation package ensures that 
+# This module maintains the API credentials used by the system to perform it's duties. It uses the
+# CryptographyMethods package to encrypt everything going in to the credentials table and decrypt everything coming
+# out.
 
 # ## Module Imports
+# Of course SQLite3, argparse, and logging are all utilized, but the main import here is the CryptographyMethods
+# package; which powers the method of secrecy used by the system. 
 
 # In[ ]:
 
@@ -17,10 +16,12 @@
 import argparse
 from sqlite3 import connect
 from logging import getLogger, info, debug, exception
-from CryptographyMethods import *
+import CryptographyMethods
 
 
 # ## Rebuild Encryption Key
+# All cryptograms are locked behind a secret key known only to the administrator.  This key need not be remembered
+# either; as it's the SHA256 hash of the administrators private ssh key.
 
 # In[ ]:
 
@@ -31,22 +32,43 @@ def BuildPrivateKey(keyfile):
   getLogger()
   info(f"Reading private key from {keyfile}.")
 
-  cryptogram = CryptographyMethods
-
   with open(keyfile, "r") as privkey:
-    privkey = privkey.read()
+    privkey = privkey.readlines()
+  
+  privkey.pop(0); privkey.pop(-1)
 
-  return cryptogram.BuildKey(privkey)
+  key = ""
+  for line in privkey: key += line
+
+  return CryptographyMethods.BuildKey(key)
 
 
-# ## Lock Credentials
-
-# ### Setup
+# ## Unlock Credentials
+# This method takes the previously rebuilt key and uses it to decrypt a given string encrypted with that key. 
 
 # In[ ]:
 
 
-def Store_SingleKey(keyfile="tests/test.key", database="tests/test.db", credential="test", platform="test"):
+def CredentialUnlocker( keyfile, credential ):
+  """ This function simply unencrypts a given bytestring,
+  assuming the correct keyfile is supplied. """
+  getLogger()
+  info("Unlocking credentials.\n")
+
+  return CryptographyMethods.Decryption(
+    BuildPrivateKey(keyfile),
+    credential
+  ).decode()
+
+
+# ## Credential Storage
+
+# ### Single-Key
+
+# In[ ]:
+
+
+def Store_SingleKey(keyfile, database, credential, platform):
   """
   This function will add a new credential to the database.
   If the singleKey argument is true then it just encrypts the value of
@@ -78,10 +100,7 @@ def Store_SingleKey(keyfile="tests/test.key", database="tests/test.db", credenti
   # Encrypt the given credential using Cryptography Methods.
   info(f"Applying encryption to secret credential.")
   try:
-    secret = cryptogram.Encryption(
-      BuildPrivateKey(keyfile),
-      credential
-    )
+    secret = cryptogram.Encryption( BuildPrivateKey(keyfile), credential )
 
   except Exception as error:
     exception(f"There was a problem with encrypting the credential.\n{error}")
@@ -100,16 +119,17 @@ def Store_SingleKey(keyfile="tests/test.key", database="tests/test.db", credenti
   # Add the secret to the column
   info(f"Adding credential to {platform} column.")
   try: execute("UPDATE credentials SET {}=? WHERE username='admin';"\
-    .format(platform), (secret,)
+       .format(platform.lower()), (secret,)
   )
 
   except Exception as error:
     exception(f"There was a problem trying to write the credential to the table.")
     return error
 
-  info() 
   return connection.commit()
 
+
+# ### Multi-Key
 
 # In[ ]:
 
@@ -143,10 +163,7 @@ def Store_MultiKey(keyfile="tests/test.key", database="tests/test.db", credentia
   # Encrypt the platform key credential.
   info("Applying encryption to platform key credential")
   try: 
-    credential['key'] = cryptogram.Encryption(
-      BuildPrivateKey(keyfile),
-      credential['key']
-    )
+    credential['key'] = CryptographyMethods.Encryption( BuildPrivateKey(keyfile), credential['key'] )
     info("Encryption successful.")
   
   except Exception as error:
@@ -157,7 +174,7 @@ def Store_MultiKey(keyfile="tests/test.key", database="tests/test.db", credentia
   # Create a $platform_key column for the credentials table.
   info(f"Creating {platform}_key column within credentials database.")
   try:
-    execute( "ALTER credentials ADD {} BYTES".format(f"{platform}_key"))
+    execute( "ALTER TABLE credentials ADD {} BYTES".format(f"{platform}_key"))
     info("Column {platform}_key created.")
 
   except Exception as error:
@@ -168,9 +185,7 @@ def Store_MultiKey(keyfile="tests/test.key", database="tests/test.db", credentia
   # Add the encrypted key to the $platform_key column.
   info(f"Adding platform key to {platform}_key column.")
   try:
-    execute(
-      "UPDATE credentials SET {}=? WHERE username='admin';"\
-        .format(f"{platform}_key"),
+    execute("UPDATE credentials SET {}=? WHERE username='admin';".format(f"{platform}_key"),
         (credential['key'],)
     )
     info("Addition successful.")
@@ -194,7 +209,7 @@ def Store_MultiKey(keyfile="tests/test.key", database="tests/test.db", credentia
   # Create a $platform_secret column for the secret credential.
   info(f"Creating {platform}_secret column within the credentials table.")
   try:
-    execute("ALTER credentials ADD {} BYTES".format(f"{platform}_secret"))
+    execute("ALTER TABLE credentials ADD {} BYTES".format(f"{platform}_secret"))
     info("Column {platform}_key creation successful.")
 
   except Exception as error:
@@ -221,36 +236,14 @@ def Store_MultiKey(keyfile="tests/test.key", database="tests/test.db", credentia
   return connection.commit()
 
 
-# ## Unlock Credentials
-# All credentials need to be decrypted before passing back to the caller; so this method 
+# ## Credential Retrieval
+
+# ### Single-Key
 
 # In[ ]:
 
 
-def CredentialUnlocker( keyfile, credential ):
-  """ This function simply unencrypts a given bytestring,
-  assuming the correct keyfile is supplied. """
-  getLogger()
-  info("Unlocking credentials.\n")
-
-  cryptogram = CryptographyMethods
-
-  return cryptogram.Decryption(
-    BuildPrivateKey(keyfile),
-    credential
-  ).decode()
-
-
-# ## Retrieve Single-Key Credential
-
-# In[ ]:
-
-
-def SingleKeyAPICredentials( platform, credabase, keyfile ):
-  """
-  This function retrieves the key for any API that only requires a single
-  credential for validation.
-  """
+def SingleKeyAPICredentials( platform="test", credabase="tests/test.db", keyfile="tests/test.key" ):
 
   getLogger()
 
@@ -259,20 +252,15 @@ def SingleKeyAPICredentials( platform, credabase, keyfile ):
   cursor = connection.cursor()
   execute = cursor.execute
 
-  cryptogram = CryptographyMethods
-
 
   info(f"Retrieving single-key credentials for {platform}.\n")
-  secrets = execute(
-    "SELECT ? FROM credentials WHERE username = 'admin'",
-    (platform,)
-  ).fetchall()[0][0]
+  secret = execute("SELECT {} FROM credentials WHERE username = 'admin'".format(platform))\
+           .fetchall()[0][0]
 
-  return cryptogram.Decryption(
-    BuildPrivateKey(keyfile),
-    secret
-  ).decrypt()
+  return CryptographyMethods.Decryption( BuildPrivateKey(keyfile), secret ).decode()
 
+
+# ### Multi-Key
 
 # In[ ]:
 
@@ -300,4 +288,116 @@ def MultiKeyAPICredentials( platform, credabase, keyfile ):
                   "secret": CredentialUnlocker(keyfile, secrets[1]) }
 
   return credentials
+
+
+# # Userland Credential Addition
+
+# In[ ]:
+
+
+def AddCredential():
+
+  # Check if this is a single or multi key.
+  while True:
+    single_key = str(input("Is this a single-key credential? y/n\n"))
+
+    if len(single_key) == 0:
+      single_key = True
+      break
+
+    if single_key[0].lower() == 'y':
+      single_key == True
+      break
+
+    elif single_key[0].lower() == 'n':
+      single_key == False
+      break
+
+    else:
+      print("Error! Please only type either ues or no.")
+
+
+  # Collect the platform to add credentials for.
+  while True:
+    platform = str(input("Type the name of the platform to add credentials for:\n"))
+    confirmation = input(f"You typed: {platform};\nis this correct? Y/n\n")
+
+    if len(confirmation) == 0: break
+
+    if confirmation[0].lower() == "y": break
+    elif confirmation[0].lower() == "n": pass
+    else:
+      print("Error! Please type either yes or no.")
+  
+
+  # Collect the keyfile.
+  while True:
+    keyfile = str(input("Type the filepath to the keyfile to encrypt the credential with:\n"))
+    confirmation = input(f"You typed: {keyfile};\nis this correct? Y/n\n")
+
+    if len(confirmation) == 0: break
+
+    if confirmation[0].lower() == "y" or None: break
+    elif confirmation[0].lower() == "n": pass
+    else:
+      print("Error! Please type either yes or no.")
+
+
+  # Collect database filepath.
+  while True:
+    database = str(input("Type the filepath to the database to store the credential.\n"))
+    confirmation = input(f"You typed: {database}; is this correct? Y/n\n")
+
+    if len(confirmation) == 0: break
+
+    if confirmation[0].lower() == "y" or None: break
+    elif confirmation[0].lower() == "n": pass
+    else:
+      print("Error! Please type either yes or no.")
+
+
+  # Collect the credentials.
+  if single_key:
+
+    while True:
+      credential = str(input("Type the credential to be stored:\n"))
+      confirmation = input(f"You typed: {credential}; is this correct? Y/n\n")
+
+      if len(confirmation) == 0: break
+
+      if confirmation[0].lower() == "y" or None: break
+      elif confirmation[0].lower() == "n": pass
+      else: print("Error! Please type either yes or no.")
+
+    return Store_SingleKey(keyfile, database, credential, platform)
+
+
+  else:
+
+    while True:
+      credential_key = str(input("Type the credential key to be stored:\n"))
+      confirmation = input(f"You typed: {credential_key}; is this correct? Y/n\n")
+
+      if len(confirmation) == 0: break
+
+      if confirmation[0].lower() == "y": break
+      elif confirmation[0].lower() == "n": pass
+      else: print("Error! Please type either yes or no.")
+
+
+    while True:
+      credential_secret = str(input("Type the credential key to be stored:\n"))
+      confirmation = input(f"You typed: {credential_secret}; is this correct? Y/n\n")
+
+      if len(confirmation) == 0: break
+      
+      if confirmation[0].lower() == "y": break
+      elif confirmation[0].lower() == "n": pass
+      else: print("Error! Please type either yes or no.")
+
+
+    credential = {
+      "key": credential_key,
+      "secret": credential_secret
+    }; return Store_MultiKey(keyfile, database, credential, platform)
 
