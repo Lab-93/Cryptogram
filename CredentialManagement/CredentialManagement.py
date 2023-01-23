@@ -17,7 +17,7 @@
 import argparse
 from sqlite3 import connect
 from logging import getLogger, info, debug, exception
-from CryptographyMethods import *
+import CryptographyMethods
 
 
 # ## Rebuild Encryption Key
