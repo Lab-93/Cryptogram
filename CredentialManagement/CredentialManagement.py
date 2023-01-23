@@ -48,10 +48,16 @@ def BuildPrivateKey(keyfile):
 # In[ ]:
 
 
-  with open(keyfile, "r") as privkey:
-    privkey = privkey.read()
+def CredentialUnlocker( keyfile, credential ):
+  """ This function simply unencrypts a given bytestring,
+  assuming the correct keyfile is supplied. """
+  getLogger()
+  info("Unlocking credentials.\n")
 
-  return cryptogram.BuildKey(privkey)
+  return CryptographyMethods.Decryption(
+    BuildPrivateKey(keyfile),
+    credential
+  ).decode()
 
 
 # ## Lock Credentials
