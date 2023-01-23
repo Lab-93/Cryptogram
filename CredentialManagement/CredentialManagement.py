@@ -60,9 +60,9 @@ def CredentialUnlocker( keyfile, credential ):
   ).decode()
 
 
-# ## Lock Credentials
+# ## Credential Storage
 
-# ### Setup
+# ### Single-Key
 
 # In[ ]:
 
@@ -99,10 +99,7 @@ def Store_SingleKey(keyfile, database, credential, platform):
   # Encrypt the given credential using Cryptography Methods.
   info(f"Applying encryption to secret credential.")
   try:
-    secret = cryptogram.Encryption(
-      BuildPrivateKey(keyfile),
-      credential
-    )
+    secret = cryptogram.Encryption( BuildPrivateKey(keyfile), credential )
 
   except Exception as error:
     exception(f"There was a problem with encrypting the credential.\n{error}")
