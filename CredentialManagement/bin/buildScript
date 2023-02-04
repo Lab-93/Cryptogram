@@ -1,2 +1,0 @@
-#!/bin/bash
-/home/guyyatsu/.local/bin/jupyter nbconvert --to python --output-dir "./src/CredentialManagement" CredentialManagement.ipynb
