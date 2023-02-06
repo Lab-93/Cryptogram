@@ -1,7 +1,7 @@
 pyproject.toml
-src/CredentialValidation/CredentialManagement.py
-src/CredentialValidation/CryptographyMethods.py
-src/CredentialValidation/__init__.py
+src/Lab93_Cryptogram/CredentialManagement.py
+src/Lab93_Cryptogram/CryptographyMethods.py
+src/Lab93_Cryptogram/__init__.py
 src/Lab93_Cryptogram.egg-info/PKG-INFO
 src/Lab93_Cryptogram.egg-info/SOURCES.txt
 src/Lab93_Cryptogram.egg-info/dependency_links.txt

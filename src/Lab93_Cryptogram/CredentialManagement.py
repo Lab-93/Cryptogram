@@ -16,7 +16,7 @@
 import argparse
 from sqlite3 import connect
 from logging import getLogger, info, debug, exception
-import CryptographyMethods
+from CryptographyMethods import CryptographyMethodsAPI
 
 
 # ## Rebuild Encryption Key
@@ -29,8 +29,6 @@ import CryptographyMethods
 def BuildPrivateKey(keyfile):
   """ This function uses a given file as the base to re-build the key
   used to encrypt private credentials known to the administrator. """
-  getLogger()
-  info(f"Reading private key from {keyfile}.")
 
   with open(keyfile, "r") as privkey:
     privkey = privkey.readlines()
@@ -40,7 +38,7 @@ def BuildPrivateKey(keyfile):
   key = ""
   for line in privkey: key += line
 
-  return CryptographyMethods.BuildKey(key)
+  return CryptographyMethodsAPI.BuildKey(key)
 
 
 # ## Unlock Credentials
@@ -55,7 +53,7 @@ def CredentialUnlocker( keyfile, credential ):
   getLogger()
   info("Unlocking credentials.\n")
 
-  return CryptographyMethods.Decryption(
+  return CryptographyMethodsAPI.Decryption(
     BuildPrivateKey(keyfile),
     credential
   ).decode()
@@ -94,7 +92,7 @@ def Store_SingleKey(keyfile, database, credential, platform):
     ); return error
 
 
-  cryptogram = CryptographyMethods
+  cryptogram = CryptographyMethodsAPI
 
 
   # Encrypt the given credential using Cryptography Methods.
@@ -154,7 +152,7 @@ def Store_MultiKey(keyfile="tests/test.key", database="tests/test.db", credentia
     ); return error
 
 
-  cryptogram = CryptographyMethods
+  cryptogram = CryptographyMethodsAPI
 
 
   info("Multi-Key credentials selected.")
@@ -163,7 +161,7 @@ def Store_MultiKey(keyfile="tests/test.key", database="tests/test.db", credentia
   # Encrypt the platform key credential.
   info("Applying encryption to platform key credential")
   try: 
-    credential['key'] = CryptographyMethods.Encryption( BuildPrivateKey(keyfile), credential['key'] )
+    credential['key'] = CryptographyMethodsAPI.Encryption( BuildPrivateKey(keyfile), credential['key'] )
     info("Encryption successful.")
   
   except Exception as error:
