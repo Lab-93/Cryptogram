@@ -1,29 +1,9 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# # Lab-93 Authentication Validation
-# This module maintains the API credentials used by the system to perform it's duties. It uses the
-# CryptographyMethods package to encrypt everything going in to the credentials table and decrypt everything coming
-# out.
-
-# ## Module Imports
-# Of course SQLite3, argparse, and logging are all utilized, but the main import here is the CryptographyMethods
-# package; which powers the method of secrecy used by the system. 
-
-# In[ ]:
-
+#!/bin/python3
 
 import argparse
 from sqlite3 import connect
 from logging import getLogger, info, debug, exception
 from CryptographyMethods import CryptographyMethodsAPI
-
-
-# ## Rebuild Encryption Key
-# All cryptograms are locked behind a secret key known only to the administrator.  This key need not be remembered
-# either; as it's the SHA256 hash of the administrators private ssh key.
-
-# In[ ]:
 
 
 def BuildPrivateKey(keyfile):
@@ -38,13 +18,8 @@ def BuildPrivateKey(keyfile):
   key = ""
   for line in privkey: key += line
 
-  return CryptographyMethodsAPI.BuildKey(key)
-
-
-# ## Unlock Credentials
-# This method takes the previously rebuilt key and uses it to decrypt a given string encrypted with that key. 
-
-# In[ ]:
+  cryptogram = CryptographyMethodsAPI()
+  return cryptogram.BuildKey(key)
 
 
 def CredentialUnlocker( keyfile, credential ):
@@ -53,17 +28,11 @@ def CredentialUnlocker( keyfile, credential ):
   getLogger()
   info("Unlocking credentials.\n")
 
-  return CryptographyMethodsAPI.Decryption(
+  cryptogram = CryptographyMethodsAPI()
+  return cryptogram.Decryption(
     BuildPrivateKey(keyfile),
     credential
-  ).decode()
-
-
-# ## Credential Storage
-
-# ### Single-Key
-
-# In[ ]:
+  )
 
 
 def Store_SingleKey(keyfile, database, credential, platform):
@@ -92,7 +61,7 @@ def Store_SingleKey(keyfile, database, credential, platform):
     ); return error
 
 
-  cryptogram = CryptographyMethodsAPI
+  cryptogram = CryptographyMethodsAPI()
 
 
   # Encrypt the given credential using Cryptography Methods.
@@ -125,11 +94,6 @@ def Store_SingleKey(keyfile, database, credential, platform):
     return error
 
   return connection.commit()
-
-
-# ### Multi-Key
-
-# In[ ]:
 
 
 def Store_MultiKey(keyfile="tests/test.key", database="tests/test.db", credential="test", platform="test"):
@@ -234,13 +198,6 @@ def Store_MultiKey(keyfile="tests/test.key", database="tests/test.db", credentia
   return connection.commit()
 
 
-# ## Credential Retrieval
-
-# ### Single-Key
-
-# In[ ]:
-
-
 def SingleKeyAPICredentials( platform="test", credabase="tests/test.db", keyfile="tests/test.key" ):
 
   getLogger()
@@ -256,11 +213,6 @@ def SingleKeyAPICredentials( platform="test", credabase="tests/test.db", keyfile
            .fetchall()[0][0]
 
   return CryptographyMethods.Decryption( BuildPrivateKey(keyfile), secret ).decode()
-
-
-# ### Multi-Key
-
-# In[ ]:
 
 
 def MultiKeyAPICredentials( platform, credabase, keyfile ):
@@ -286,11 +238,6 @@ def MultiKeyAPICredentials( platform, credabase, keyfile ):
                   "secret": CredentialUnlocker(keyfile, secrets[1]) }
 
   return credentials
-
-
-# # Userland Credential Addition
-
-# In[ ]:
 
 
 def AddCredential():

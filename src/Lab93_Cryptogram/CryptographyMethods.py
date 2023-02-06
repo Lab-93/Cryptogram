@@ -1,22 +1,7 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# # Lab-93 Cryptography Methods
-
-# ## Module Imports
-
-# In[ ]:
-
-
 #!/bin/python3
 from base64 import urlsafe_b64encode
 import hashlib as hashlib
 from cryptography.fernet import Fernet
-
-
-# ## CryptographyMethodsAPI
-
-# In[ ]:
 
 
 class CryptographyMethodsAPI():
@@ -36,70 +21,46 @@ class CryptographyMethodsAPI():
   """
 
 
-# ### Constants Setup
-
-# In[ ]:
 
 
-def __init__(self):
-  self = self
+  def __init__(self):
+    self = self
 
 
-# ### SHA-256
-
-# In[ ]:
-
-
-def SHA256(self, secret: str):
-  """
-  Create a SHA-256 hash of whatever value is given as 'secret' and
-  return the the hexdigest of the bytes-encoded secret.
-  """
-  return hashlib.sha256(secret.encode())\
-                .hexdigest()
+  def SHA256(self, secret: str):
+    """
+    Create a SHA-256 hash of whatever value is given as 'secret' and
+    return the the hexdigest of the bytes-encoded secret.
+    """
+    return hashlib.sha256(secret.encode())\
+                  .hexdigest()
 
 
-# ### BuildKey
-
-# In[ ]:
-
-
-def BuildKey(self, key: str):
-  """
-  Create a two-way encryption token using the first 32
-  digits of the hash of a given string named 'key'.
-
-  The results are then encoded in urlsafe-base64 bytes
-  and returned to the caller.
-  """
-  basecode = self.SHA256(str(key))[:32]
-  return urlsafe_b64encode(basecode.encode())
+  def BuildKey(self, key: str):
+    """
+    Create a two-way encryption token using the first 32
+    digits of the hash of a given string named 'key'.
+  
+    The results are then encoded in urlsafe-base64 bytes
+    and returned to the caller.
+    """
+    basecode = self.SHA256(str(key))[:32]
+    return urlsafe_b64encode(basecode.encode())
 
 
-# ### Encryption
-
-# In[ ]:
-
-
-def Encryption(self, phrase: bytes, target: str):
-  """
-  Encrypt a 'target' string using a byte 'phrase' provided by
-  CryptographyMethods.BuildKey as an encryption token.
-  """
-  intelligence = Fernet(phrase)
-  return intelligence.encrypt(bytes(target, 'utf-8'))
+  def Encryption(self, phrase: bytes, target: str):
+    """
+    Encrypt a 'target' string using a byte 'phrase' provided by
+    CryptographyMethods.BuildKey as an encryption token.
+    """
+    intelligence = Fernet(phrase)
+    return intelligence.encrypt(bytes(target, 'utf-8'))
 
 
-# ### Decryption
-
-# In[ ]:
-
-
-def Decryption(self, phrase: bytes, target: str):
-  """
-  Decrypt a 'target' string using a byte 'phrase' provided by
-  CryptographyMethods.BuildKey as an encryption token.
-  """
-  intelligence = Fernet(phrase)
-  return intelligence.decrypt(target)
-
+  def Decryption(self, phrase: bytes, target: str):
+    """
+    Decrypt a 'target' string using a byte 'phrase' provided by
+    CryptographyMethods.BuildKey as an encryption token.
+    """
+    intelligence = Fernet(phrase)
+    return intelligence.decrypt(target).decode()
