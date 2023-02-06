@@ -3,7 +3,7 @@
 import argparse
 from sqlite3 import connect
 from logging import getLogger, info, debug, exception
-from CryptographyMethods import CryptographyMethodsAPI
+from .CryptographyMethods import CryptographyMethodsAPI
 
 
 def BuildPrivateKey(keyfile):
