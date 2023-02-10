@@ -212,7 +212,7 @@ def SingleKeyAPICredentials( platform="test", credabase="tests/test.db", keyfile
   secret = execute("SELECT {} FROM credentials WHERE username = 'admin'".format(platform))\
            .fetchall()[0][0]
 
-  return CryptographyMethods.Decryption( BuildPrivateKey(keyfile), secret ).decode()
+  return CryptographyMethodsAPI().Decryption( BuildPrivateKey(keyfile), secret )
 
 
 def MultiKeyAPICredentials( platform, credabase, keyfile ):
