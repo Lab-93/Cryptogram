@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "Lab93-Cryptogram"
-version = "0.0.5"
+version = "0.0.6"
 authors = [
   { name="Hunter Dale", email="guyyatsu@gmail.com" },
 ]
