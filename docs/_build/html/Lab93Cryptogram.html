@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Lab93Cryptogram package &#8212; Lab93Cryptogram 0.0.1 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Lab93Cryptogram" href="modules.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="lab93cryptogram-package">
+<h1>Lab93Cryptogram package<a class="headerlink" href="#lab93cryptogram-package" title="Permalink to this heading">¶</a></h1>
+<section id="module-Lab93Cryptogram">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-Lab93Cryptogram" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Lab93Cryptogram.CryptographyMethodsAPI">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Lab93Cryptogram.</span></span><span class="sig-name descname"><span class="pre">CryptographyMethodsAPI</span></span><a class="reference internal" href="_modules/Lab93Cryptogram.html#CryptographyMethodsAPI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Lab93Cryptogram.CryptographyMethodsAPI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The CryptographyMethodsAPI class enscapulates methods used for keeping
+secrets in both one-way and two-way forms.</p>
+<p>SHA-256 is delivered in a much simpler syntax than the default method
+utilized by hashlib; the CryptographyMethods.SHA256 object merely
+requires a secret to be hashed and delivers the hexdigest of the
+resulting byte object.</p>
+<p>For two-way secret keeping CryptographyMethods.Encryption and
+CryptographyMethods.Decryption are offered; both of which utilize the
+CryptographyMethods.BuildKey function for locking and unlocking secrets,
+respectively.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Lab93Cryptogram.CryptographyMethodsAPI.BuildKey">
+<span class="sig-name descname"><span class="pre">BuildKey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lab93Cryptogram.html#CryptographyMethodsAPI.BuildKey"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Lab93Cryptogram.CryptographyMethodsAPI.BuildKey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a two-way encryption token using the first 32
+digits of the hash of a given string named ‘key’.</p>
+<p>The results are then encoded in urlsafe-base64 bytes
+and returned to the caller.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lab93Cryptogram.CryptographyMethodsAPI.Decryption">
+<span class="sig-name descname"><span class="pre">Decryption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phrase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lab93Cryptogram.html#CryptographyMethodsAPI.Decryption"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Lab93Cryptogram.CryptographyMethodsAPI.Decryption" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decrypt a ‘target’ string using a byte ‘phrase’ provided by
+CryptographyMethods.BuildKey as an encryption token.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lab93Cryptogram.CryptographyMethodsAPI.Encryption">
+<span class="sig-name descname"><span class="pre">Encryption</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phrase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lab93Cryptogram.html#CryptographyMethodsAPI.Encryption"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Lab93Cryptogram.CryptographyMethodsAPI.Encryption" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encrypt a ‘target’ string using a byte ‘phrase’ provided by
+CryptographyMethods.BuildKey as an encryption token.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Lab93Cryptogram.CryptographyMethodsAPI.SHA256">
+<span class="sig-name descname"><span class="pre">SHA256</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">secret</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/Lab93Cryptogram.html#CryptographyMethodsAPI.SHA256"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Lab93Cryptogram.CryptographyMethodsAPI.SHA256" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a SHA-256 hash of whatever value is given as ‘secret’ and
+return the the hexdigest of the bytes-encoded secret.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Lab93Cryptogram</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">Lab93Cryptogram</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Lab93Cryptogram package</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">Lab93Cryptogram</a><ul>
+      <li>Previous: <a href="modules.html" title="previous chapter">Lab93Cryptogram</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Hunter Dale.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 6.2.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+      |
+      <a href="_sources/Lab93Cryptogram.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -3,8 +3,8 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "Lab93-Cryptogram"
-version = "0.0.6"
+name = "Lab93Cryptogram"
+version = "0.0.1"
 authors = [
   { name="Hunter Dale", email="guyyatsu@gmail.com" },
 ]
